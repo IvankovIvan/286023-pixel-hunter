@@ -70,7 +70,8 @@ const gameOne = getElementFromTemplate(`<header class="header">
     </div>
   </footer>`);
 
-gameOne.querySelector(`form`).addEventListener(`change`, () => {
+gameOne.querySelector(`form`).addEventListener(`change`, (evt) => {
+  evt.preventDefault();
   if (gameOne.querySelectorAll(`input[type="radio"]:checked`).length === 2) {
     changeView(gameTwo);
   }

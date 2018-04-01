@@ -1,7 +1,20 @@
 import intro from './template/intro';
 import {changeView} from './util';
+import greeting from './template/greeting';
 
 changeView(intro);
+document.querySelector(`.central`).addEventListener(`click`, (evt) => {
+  if (evt.target && evt.target.tagName.toLocaleLowerCase() === `img`) {
+    const parent = evt.target.parentElement;
+    if (parent && parent.tagName.toLocaleLowerCase() === `button` &&
+      parent.classList.contains(`back`)
+    ) {
+      evt.preventDefault();
+      changeView(greeting);
+    }
+  }
+});
+
 // import {changeView} from './util';
 
 // const KEY_ARROW = [37, 39];

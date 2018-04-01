@@ -10,4 +10,13 @@ export const getElementFromTemplate = (htmlString) => {
   return div;
 };
 
+export const elementChangeView = (view) => {
+  return (elementClick) => {
+    const clickElement = () => {
+      changeView(view);
+      elementClick.removeEventListener(`click`, clickElement);
+    };
+    elementClick.addEventListener(`click`, clickElement);
+  };
+};
 

@@ -31,7 +31,9 @@ const greeting = getElementFromTemplate(`<div class="greeting central--blur">
     </div>
   </footer>`);
 
-greeting.querySelector(`.greeting__continue`).addEventListener(`click`, () => {
-  changeView(rules);
-});
+greeting.querySelector(`.greeting__continue`)
+    .addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      changeView(rules);
+    });
 export default greeting;

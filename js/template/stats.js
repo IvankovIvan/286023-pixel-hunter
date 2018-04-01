@@ -1,5 +1,5 @@
-import {getElementFromTemplate, changeView} from '../util.js';
-import greeting from "./greeting";
+import {getElementFromTemplate} from '../util.js';
+// import greeting from './greeting';
 
 const stats = getElementFromTemplate(`<header class="header">
     <div class="header__back">
@@ -128,8 +128,15 @@ const stats = getElementFromTemplate(`<header class="header">
     </div>
   </footer>`);
 
-stats.querySelector(`.back`).addEventListener(`click`, () => {
-  changeView(greeting);
-});
+
+// // utilTemplate(stats.querySelector(`.back`), greeting);
+// const btnBack = stats.querySelector(`.back`);
+// const clickElement = (evt) => {
+//   evt.preventDefault();
+//   changeView(greeting);
+//   btnBack.removeEventListener(`click`, clickElement);
+// };
+
+// btnBack.addEventListener(`click`, clickElement);
 
 export default stats;

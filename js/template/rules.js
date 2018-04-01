@@ -38,7 +38,8 @@ const rules = getElementFromTemplate(`<header class="header">
   </footer>`);
 
 const rulesInput = rules.querySelector(`.rules__input`);
-rulesInput.addEventListener(`input`, () => {
+rulesInput.addEventListener(`input`, (evt) => {
+  evt.preventDefault();
   if (rulesInput.value.length > 0) {
     let rulesButton = rules.querySelector(`.rules__button`);
     rulesButton.disabled = false;

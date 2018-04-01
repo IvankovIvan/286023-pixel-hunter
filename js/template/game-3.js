@@ -57,7 +57,8 @@ const gameThree = getElementFromTemplate(`<header class="header">
     </div>
   </footer>`);
 
-gameThree.querySelector(`form`).addEventListener(`click`, () => {
+gameThree.querySelector(`form`).addEventListener(`click`, (evt) => {
+  evt.preventDefault();
   changeView(stats);
 });
 export default gameThree;

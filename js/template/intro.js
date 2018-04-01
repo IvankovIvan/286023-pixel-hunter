@@ -22,7 +22,8 @@ const intro = getElementFromTemplate(`<div id="main" class="central__content">
     </div>
   </footer>`);
 
-intro.querySelector(`.intro__asterisk`).addEventListener(`click`, () => {
+intro.querySelector(`.intro__asterisk`).addEventListener(`click`, (evt) => {
+  evt.preventDefault();
   changeView(greeting);
 });
 
