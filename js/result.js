@@ -5,9 +5,10 @@ const Answer = {
   TIME_SLOW: 20
 };
 const LIVE_POINT = 50;
+const ANSWERCOUNT = 10;
 
 export const scoring = (answerArr, liveCount) => {
-  if (answerArr.length < 10) {
+  if (answerArr.length < ANSWERCOUNT) {
     return -1;
   }
   let point = 0;
