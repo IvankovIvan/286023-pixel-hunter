@@ -1,7 +1,8 @@
-import {getElementFromTemplate, changeView} from '../util.js';
-import gameOne from './game-1';
+import {getElementFromTemplate} from '../util.js';
+// import gameOne from './game-1';
 
-const rules = getElementFromTemplate(`<header class="header">
+const rules = {
+  template: getElementFromTemplate(`<header class="header">
     <div class="header__back">
       <button class="back">
         <img src="img/arrow_left.svg" width="45" height="45" alt="Back">
@@ -25,28 +26,22 @@ const rules = getElementFromTemplate(`<header class="header">
       <button class="rules__button  continue" type="submit" disabled>Go!
       </button>
     </form>
-  </div>
-  <footer class="footer">
-    <a href="https://htmlacademy.ru" class="social-link social-link--academy">HTML Academy</a>
-    <span class="footer__made-in">Сделано в <a href="https://htmlacademy.ru" class="footer__link">HTML Academy</a> &copy; 2016</span>
-    <div class="footer__social-links">
-      <a href="https://twitter.com/htmlacademy_ru" class="social-link  social-link--tw">Твиттер</a>
-      <a href="https://www.instagram.com/htmlacademy/" class="social-link  social-link--ins">Инстаграм</a>
-      <a href="https://www.facebook.com/htmlacademy" class="social-link  social-link--fb">Фэйсбук</a>
-      <a href="https://vk.com/htmlacademy" class="social-link  social-link--vk">Вконтакте</a>
-    </div>
-  </footer>`);
-
-const rulesInput = rules.querySelector(`.rules__input`);
-rulesInput.addEventListener(`input`, (evt) => {
-  evt.preventDefault();
-  if (rulesInput.value.length > 0) {
-    let rulesButton = rules.querySelector(`.rules__button`);
-    rulesButton.disabled = false;
-    rules.querySelector(`.rules__button`).addEventListener(`click`, () => {
-      changeView(gameOne);
+  </div>`),
+  clickElement: (clickFun) => {
+    const temp = rules.template;
+    const rulesInput = temp.querySelector(`.rules__input`);
+    rulesInput.addEventListener(`input`, (evt) => {
+      evt.preventDefault();
+      if (rulesInput.value.length > 0) {
+        let rulesButton = temp.querySelector(`.rules__button`);
+        rulesButton.disabled = false;
+        rulesButton.addEventListener(`click`, (evtClick) => {
+          evtClick.preventDefault();
+          clickFun();
+        });
+      }
     });
   }
-});
+};
 
 export default rules;

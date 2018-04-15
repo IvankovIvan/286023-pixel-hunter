@@ -1,19 +1,62 @@
 import intro from './template/intro';
-import {changeView} from './util';
 import greeting from './template/greeting';
+import rules from './template/rules';
+import game from './template/game-1';
 
-changeView(intro);
-document.querySelector(`.central`).addEventListener(`click`, (evt) => {
-  if (evt.target && evt.target.tagName.toLocaleLowerCase() === `img`) {
-    const parent = evt.target.parentElement;
-    if (parent && parent.tagName.toLocaleLowerCase() === `button` &&
-      parent.classList.contains(`back`)
-    ) {
-      evt.preventDefault();
-      changeView(greeting);
-    }
+import {changeView} from './util';
+import {initialState, data} from './data/data';
+
+const selectScreen = (screen) => {
+  switch (screen) {
+    case `intro` :
+      return intro;
+    case `greeting` :
+      return greeting;
+    case `rules` :
+      return rules;
+    case `game` :
+      return game;
+    default:
+      return null;
   }
-});
+};
+
+const renderScreen = (state) => {
+  const dataCurrent = data[state.level];
+  const screenCurrent = selectScreen(dataCurrent.name);
+  if (screenCurrent === null) {
+    return;
+  }
+  const view = screenCurrent.template;
+
+  const render = () => {
+    if (dataCurrent.screen.next) {
+      renderScreen(Object.assign({}, state, {
+        'level': dataCurrent.screen.next
+      }));
+    }
+  };
+
+  if (dataCurrent.screen) {
+    screenCurrent.clickElement(render);
+  }
+
+  changeView(view);
+};
+
+renderScreen(initialState);
+
+// document.querySelector(`.central`).addEventListener(`click`, (evt) => {
+//   if (evt.target && evt.target.tagName.toLocaleLowerCase() === `img`) {
+//     const parent = evt.target.parentElement;
+//     if (parent && parent.tagName.toLocaleLowerCase() === `button` &&
+//       parent.classList.contains(`back`)
+//     ) {
+//       evt.preventDefault();
+//       changeView(greeting);
+//     }
+//   }
+// });
 
 // import {changeView} from './util';
 
