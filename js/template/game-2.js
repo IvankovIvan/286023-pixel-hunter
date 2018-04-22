@@ -1,8 +1,7 @@
 import {getElementFromTemplate} from '../util.js';
-// import gameThree from "./game-3";
 
-const gameTwo = {
-  template: getElementFromTemplate(`<header class="header">
+const gameTwo = (clickNext, state) => {
+  const view = getElementFromTemplate(`<header class="header">
     <div class="header__back">
       <button class="back">
         <img src="img/arrow_left.svg" width="45" height="45" alt="Back">
@@ -23,7 +22,8 @@ const gameTwo = {
     <p class="game__task">Угадай, фото или рисунок?</p>
     <form class="game__content  game__content--wide">
       <div class="game__option">
-        <img src="http://placehold.it/705x455" alt="Option 1" width="705" height="455">
+        <img src="${state.question[0].url}" 
+        alt="Option 1" width="705" height="455">
         <label class="game__answer game__answer--photo">
           <input name="question1" type="radio" value="photo">
           <span>Фото</span>
@@ -48,13 +48,19 @@ const gameTwo = {
         <li class="stats__result stats__result--unknown"></li>
       </ul>
     </div>
-  </div>`)
+  </div>`);
+  view.querySelector(`form`).addEventListener(`change`, (evt) => {
+    evt.preventDefault();
+    const answersView = view.querySelector(`input[type="radio"]:checked`);
+    let answer = true;
+    if (state.question[0].answer.indexOf(answersView.value) === -1) {
+      answer = false;
+    }
+    clickNext(Object.assign({}, state, {
+      answer: state.games.push({answer, time: 15})
+    }));
+  });
+  return view;
 };
-// gameTwo.querySelector(`form`).addEventListener(`change`, (evt) => {
-//   evt.preventDefault();
-//   if (gameTwo.querySelectorAll(`input[type="radio"]:checked`).length === 1) {
-//     changeView(gameThree);
-//   }
-// });
 
 export default gameTwo;

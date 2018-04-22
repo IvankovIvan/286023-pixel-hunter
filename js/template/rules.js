@@ -1,8 +1,7 @@
 import {getElementFromTemplate} from '../util.js';
-// import gameOne from './game-1';
 
-const rules = {
-  template: getElementFromTemplate(`<header class="header">
+const rules = (clickNext, state) => {
+  const view = getElementFromTemplate(`<header class="header">
     <div class="header__back">
       <button class="back">
         <img src="img/arrow_left.svg" width="45" height="45" alt="Back">
@@ -26,22 +25,22 @@ const rules = {
       <button class="rules__button  continue" type="submit" disabled>Go!
       </button>
     </form>
-  </div>`),
-  clickElement: (clickFun) => {
-    const temp = rules.template;
-    const rulesInput = temp.querySelector(`.rules__input`);
-    rulesInput.addEventListener(`input`, (evt) => {
-      evt.preventDefault();
-      if (rulesInput.value.length > 0) {
-        let rulesButton = temp.querySelector(`.rules__button`);
-        rulesButton.disabled = false;
-        rulesButton.addEventListener(`click`, (evtClick) => {
-          evtClick.preventDefault();
-          clickFun();
-        });
-      }
-    });
-  }
+  </div>`);
+
+  const rulesInput = view.querySelector(`.rules__input`);
+  let rulesButton = view.querySelector(`.rules__button`);
+
+  rulesInput.addEventListener(`input`, (evt) => {
+    evt.preventDefault();
+    rulesButton.disabled = rulesInput.value.length === 0;
+  });
+
+  rulesButton.addEventListener(`click`, (evtClick) => {
+    evtClick.preventDefault();
+    clickNext(state);
+  });
+
+  return view;
 };
 
 export default rules;

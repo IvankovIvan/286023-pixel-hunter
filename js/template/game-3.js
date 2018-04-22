@@ -1,7 +1,8 @@
-import {getElementFromTemplate, changeView} from '../util.js';
-import stats from './stats';
+import {getElementFromTemplate} from '../util.js';
+// import stats from './stats';
 
-const gameThree = getElementFromTemplate(`<header class="header">
+const gameThree = (clickNext, state) => {
+  const view = getElementFromTemplate(`<header class="header">
     <div class="header__back">
       <button class="back">
         <img src="img/arrow_left.svg" width="45" height="45" alt="Back">
@@ -21,14 +22,17 @@ const gameThree = getElementFromTemplate(`<header class="header">
   <div class="game">
     <p class="game__task">Найдите рисунок среди изображений</p>
     <form class="game__content  game__content--triple">
-      <div class="game__option">
-        <img src="http://placehold.it/304x455" alt="Option 1" width="304" height="455">
+      <div class="game__option" data-id="0">
+        <img src="${state.question[0].url}" 
+        alt="Option 1" width="304" height="455">
       </div>
-      <div class="game__option  game__option--selected">
-        <img src="http://placehold.it/304x455" alt="Option 1" width="304" height="455">
+      <div class="game__option  game__option--selected" data-id="1">
+        <img src="${state.question[1].url}" 
+        alt="Option 1" width="304" height="455">
       </div>
-      <div class="game__option">
-        <img src="http://placehold.it/304x455" alt="Option 1" width="304" height="455">
+      <div class="game__option" data-id="2">
+        <img src="${state.question[2].url}" 
+        alt="Option 1" width="304" height="455">
       </div>
     </form>
     <div class="stats">
@@ -46,9 +50,32 @@ const gameThree = getElementFromTemplate(`<header class="header">
       </ul>
     </div>
   </div>`);
+  const form = view.querySelector(`form`);
+  form.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    let answer = true;
+    if (state.question[evt.target.dataset.id].answer === null) {
+      answer = false;
+    }
+    clickNext(Object.assign({}, state, {
+      answer: state.games.push({answer, time: 15})
+    }));
+  });
 
-gameThree.querySelector(`form`).addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  changeView(stats);
-});
+  //
+  // const answersView = view.querySelectorAll(`input[type="radio"]:checked`);
+  // if (answersView.length === 1) {
+  //   let answer = true;
+  //   if (state.question[0].answer.indexOf(answersView[i].value) === -1) {
+  //     answer = false;
+  //   }
+  //   clickNext(Object.assign({}, state, {
+  //     'answer': answer
+  //   }));
+  // }
+
+  return view;
+};
+
+
 export default gameThree;

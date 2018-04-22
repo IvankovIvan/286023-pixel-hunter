@@ -1,9 +1,8 @@
 import {getElementFromTemplate} from '../util.js';
-import intro from "./intro";
 // import rules from './rules';
 
-const greeting = {
-  template: getElementFromTemplate(`<div class="greeting central--blur">
+const greeting = (clickNext, state) => {
+  const view = getElementFromTemplate(`<div class="greeting central--blur">
     <div class="greeting__logo">
       <img src="img/logo_big.png" width="201" height="89" alt="Pixel Hunter">
     </div>
@@ -21,14 +20,15 @@ const greeting = {
         <img src="img/arrow_right.svg" width="64" height="64" alt="Next">
       </span>
     </div>
-  </div>`),
-  clickElement: (clickFun) => {
-    const elementClick = greeting.template.querySelector(`.greeting__continue`);
-    elementClick.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      clickFun();
-    });
-  }
+  </div>`);
+
+  const elementClick = view.querySelector(`.greeting__continue`);
+  elementClick.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    clickNext(state);
+  });
+
+  return view;
 };
 
 export default greeting;

@@ -1,31 +1,14 @@
 import {getElementFromTemplate} from '../util.js';
-import {data} from '../data/data';
 // import gameTwo from './game-2';
 
-const dataCurrent = data[`game`];
-const gameOne = {
-  template: getElementFromTemplate(`<header class="header">
-    <div class="header__back">
-      <button class="back">
-        <img src="img/arrow_left.svg" width="45" height="45" alt="Back">
-        <img src="img/logo_small.svg" width="101" height="44">
-      </button>
-    </div>
-    <h1 class="game__timer">NN</h1>
-    <div class="game__lives">
-      <img src="img/heart__empty.svg" class="game__heart" 
-        alt="Life" width="32" height="32">
-      <img src="img/heart__full.svg" class="game__heart" 
-        alt="Life" width="32" height="32">
-      <img src="img/heart__full.svg" class="game__heart" 
-        alt="Life" width="32" height="32">
-    </div>
-  </header>
+const gameOne = (clickNext, state) => {
+  const view = getElementFromTemplate(`
   <div class="game">
-    <p class="game__task">${dataCurrent.description}</p>
+    <p class="game__task">Угадайте для каждого изображения фото или рисунок?</p>
     <form class="game__content">
       <div class="game__option">
-        <img src="http://placehold.it/468x458" alt="Option 1" width="468" height="458">
+        <img src=${state.question[0].url} 
+        alt="Option 1" width="468" height="458">
         <label class="game__answer game__answer--photo">
           <input name="question1" type="radio" value="photo">
           <span>Фото</span>
@@ -36,7 +19,8 @@ const gameOne = {
         </label>
       </div>
       <div class="game__option">
-        <img src="http://placehold.it/468x458" alt="Option 2" width="468" height="458">
+        <img src=${state.question[1].url} 
+        alt="Option 2" width="468" height="458">
         <label class="game__answer  game__answer--photo">
           <input name="question2" type="radio" value="photo">
           <span>Фото</span>
@@ -61,12 +45,28 @@ const gameOne = {
         <li class="stats__result stats__result--unknown"></li>
       </ul>
     </div>
-  </div>`)
+  </div>`);
+
+  view.querySelector(`form`).addEventListener(`change`, (evt) => {
+    evt.preventDefault();
+    const questions = state.question;
+    const answersView = view.querySelectorAll(`input[type="radio"]:checked`);
+
+    if (answersView.length === questions.length) {
+      let answer = true;
+      for (let i = 0; i < questions.length; i++) {
+        if (questions[i].answer.indexOf(answersView[i].value) === -1) {
+          answer = false;
+          break;
+        }
+      }
+
+      clickNext(Object.assign({}, state, {
+        answer: state.games.push({answer, time: 15})
+      }));
+    }
+  });
+  return view;
 };
-// gameOne.querySelector(`form`).addEventListener(`change`, (evt) => {
-//   evt.preventDefault();
-//   if (gameOne.querySelectorAll(`input[type="radio"]:checked`).length === 2) {
-//     changeView(gameTwo);
-//   }
-// });
+
 export default gameOne;

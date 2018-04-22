@@ -1,11 +1,17 @@
 import intro from './template/intro';
 import greeting from './template/greeting';
 import rules from './template/rules';
-import game from './template/game-1';
+import gameOne from './template/game-1';
+import gameTwo from './template/game-2';
+import gameThree from './template/game-3';
 
-import {changeView} from './util';
+
+import {getQuestion} from './question';
+import {changeView, getRandomInt} from './util';
 import {initialState, data} from './data/data';
 
+const START_GAME = `game`;
+const COUNT_GAME_SCREEN = 3;
 const selectScreen = (screen) => {
   switch (screen) {
     case `intro` :
@@ -14,37 +20,82 @@ const selectScreen = (screen) => {
       return greeting;
     case `rules` :
       return rules;
-    case `game` :
-      return game;
+    case `game-1` :
+      return gameOne;
+    case `game-2` :
+      return gameTwo;
+    case `game-3` :
+      return gameThree;
     default:
       return null;
   }
 };
 
-const renderScreen = (state) => {
-  const dataCurrent = data[state.level];
-  const screenCurrent = selectScreen(dataCurrent.name);
+const scoring = (games) => {
+  let point = 0;
+  games.forEach((value) => {
+    if (value.answer) {
+      point += 100;
+    }
+  });
+};
+
+const renderGameScreen = (state) => {
+  if (!state) {
+    return;
+  }
+
+  if (state.games.length === 10) {
+    scoring(state.games);
+    return;
+  }
+  const nextGame = `game-` + (getRandomInt(COUNT_GAME_SCREEN) + 1);
+
+  state = (Object.assign({}, state, {
+    dataCurrent: data[nextGame]
+  }));
+
+  if (state.dataCurrent.picCount) {
+    state = Object.assign({}, state, {
+      question: getQuestion(state.dataCurrent.picCount)
+    });
+  }
+
+  const screenCurrent =
+    selectScreen(state.dataCurrent.name)(renderGameScreen, state);
   if (screenCurrent === null) {
     return;
   }
-  const view = screenCurrent.template;
 
-  const render = () => {
-    if (dataCurrent.screen.next) {
-      renderScreen(Object.assign({}, state, {
-        'level': dataCurrent.screen.next
-      }));
-    }
-  };
-
-  if (dataCurrent.screen) {
-    screenCurrent.clickElement(render);
-  }
-
-  changeView(view);
+  changeView(screenCurrent, state);
 };
 
-renderScreen(initialState);
+const renderHelloScreen = (state) => {
+  if (!state) {
+    return;
+  }
+
+  if (state.dataCurrent.screen.next) {
+    if (state.dataCurrent.screen.next === START_GAME) {
+      renderGameScreen(initialState);
+      return;
+    }
+    state = (Object.assign({}, state, {
+      dataCurrent: data[state.dataCurrent.screen.next]
+    }));
+  }
+
+  const screenCurrent =
+    selectScreen(state.dataCurrent.name)(renderHelloScreen, state);
+  if (screenCurrent === null) {
+    return;
+  }
+
+  changeView(screenCurrent);
+
+};
+
+renderHelloScreen(initialState);
 
 // document.querySelector(`.central`).addEventListener(`click`, (evt) => {
 //   if (evt.target && evt.target.tagName.toLocaleLowerCase() === `img`) {
